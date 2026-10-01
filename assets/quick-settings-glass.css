@@ -1,0 +1,14 @@
+
+/* ===== macos-desktop 玻璃补丁：快捷设置面板（状态栏详情）不透明度 =====
+   MacTahoe 主题把 .quick-settings 背景写成 rgba(0, 0, 0, 0.01)（1% 不透明度），
+   在缺少"弹窗模糊"兜底时会近乎全透，桌面贴纸/图标透出来和面板内容叠在一起。
+   这里改成"高不透明度深色玻璃"；配合 Blur my Shell v73 的弹窗模糊即为毛玻璃。
+   参数：背景 alpha 0.55（建议 0.5~0.9 之间调节）；不想要时删除本段并重载主题即可。 */
+.quick-settings {
+  background-color: rgba(28, 28, 32, 0.55);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45) !important;
+}
+
+.quick-toggle-menu {
+  background-color: rgba(28, 28, 32, 0.62) !important;
+}
