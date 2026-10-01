@@ -22,10 +22,19 @@ banner() {
     echo
 }
 
+# confirm <提示> [默认: yes|no]
 confirm() {
+    local message="$1" default="${2:-yes}"
     if $ASSUME_YES; then return 0; fi
-    read -r -p "$1 [Y/n] " answer
-    [[ -z "$answer" || "$answer" =~ ^[Yy] ]]
+    local hint="[Y/n]"
+    [[ "$default" == "no" ]] && hint="[y/N]"
+    local answer
+    read -r -p "$message $hint " answer
+    if [[ -z "$answer" ]]; then
+        [[ "$default" == "yes" ]]
+    else
+        [[ "$answer" =~ ^[Yy] ]]
+    fi
 }
 
 # ---------------------------------------------------------------- 命令包装
