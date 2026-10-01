@@ -27,11 +27,32 @@ main() {
 
     check_environment
 
-    if ! $ASSUME_YES; then
-        echo "将要执行："
+    if check_has_problems && ! $FORCE; then
+        if $DRY_RUN; then
+            warn "（dry-run）检测到不匹配项；正式安装会被拦下，确认要继续请加 --force"
+        elif $ASSUME_YES; then
+            die "环境不匹配，已停止（确认要继续：bash install.sh --force）"
+        else
+            warn "环境与目标不一致，继续可能装不好或没效果。"
+            if ! confirm "仍然尝试安装吗？" no; then
+                echo
+                echo "已取消，未做任何修改。"
+                echo "（确认要继续：bash install.sh --force）"
+                exit 0
+            fi
+        fi
+    fi
+
+    if ! $ASSUME_YES && ! $DRY_RUN; then
+        echo "${C_BOLD}本次将执行${C_RESET}（每步都会先备份，可用 restore.sh 还原）："
         printf '  - %s\n' "${MODULES[@]}"
-        echo "  （每一步都会先备份，可用 restore.sh 还原）"
-        confirm "继续吗？" || die "已取消"
+        echo
+        if ! confirm "继续安装吗？" yes; then
+            echo
+            echo "已取消，未做任何修改。"
+            exit 0
+        fi
+        echo
     fi
 
     backup_init

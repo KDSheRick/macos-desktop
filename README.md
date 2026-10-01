@@ -31,6 +31,31 @@ bash restore.sh          # 后悔了：一键还原到安装前
 | 顶栏歌词 | 托盘区显示当前歌词（可单独开关） |
 | 灵动岛 | 顶栏正中间的胶囊：悬停展开音乐 / 歌词 / 时钟 / API 用量，通知自动展开显示，滚动歌词 |
 
+## 安装流程中的环境检查
+
+`install.sh` **第一步是环境检查**：逐项对照目标环境（Ubuntu / GNOME 50 / Wayland /
+ubuntu-dock / 用户扩展开关 / 磁盘 / 网络），并列出「现状」（哪些已装好会跳过）：
+
+```
+环境检查（目标环境：Ubuntu + GNOME Shell 50 + Wayland）
+  ✓ 发行版              Ubuntu 26.04.1 LTS
+  ✓ GNOME Shell         50.1
+  ✓ 会话类型            wayland
+  ✓ 桌面组件            ubuntu-dock ✓  ubuntu-appindicators ✓
+  ✓ 用户扩展总开关      已开启（可以加载第三方扩展）
+  ! 网络                github.com=no  extensions.gnome.org=yes
+现状（已符合目标的会自动跳过）
+  ✓ 主题 / 图标 / 光标       ✓ 桌面贴纸
+  · 毛玻璃设置（将写入）      ✓ 灵动岛扩展
+────────────────────────────────────────────
+  匹配 7/8 项，1 项提示
+```
+
+- **全部匹配** → 询问「继续安装吗？」（默认继续）
+- **有不匹配** → 询问「仍然尝试安装吗？」（**默认不继续**，回车即取消，未做任何修改）
+  - 想强行继续：`bash install.sh --force`
+  - 非交互场景（`--yes`）遇不匹配会**直接停止**，必须显式加 `--force`
+
 ## 支持范围
 
 **只支持和作者一致的环境**（不是通用工具）：
@@ -48,8 +73,8 @@ bash restore.sh          # 后悔了：一键还原到安装前
 bash install.sh                      # 一键安装
 bash install.sh --dry-run            # 只打印将要做的事，不动系统
 bash install.sh --only dock,blur     # 只装指定模块
-bash install.sh --only theme --force # 强制重装主题
-bash install.sh --yes                # 不交互（脚本化）
+bash install.sh --only theme --force # 强制重装主题 / 环境不匹配时强行继续
+bash install.sh --yes                # 不交互（脚本化；环境不匹配会直接停止，需配合 --force）
 
 bash verify.sh                       # 安装后自检（只读）
 bash restore.sh                      # 还原到最近一次安装前
